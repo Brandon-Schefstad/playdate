@@ -16,13 +16,13 @@ const postRoutes = require('./routes/posts')
 const commentRoute = require('./routes/comments')
 
 //application setup
-const app = express();
+const app = express()
 
 //Env file
 require('dotenv').config()
 
 //Connect to database
-connectDB();
+connectDB()
 
 //Passport config
 require('./config/passport')(passport)
@@ -30,8 +30,8 @@ require('./config/passport')(passport)
 //EJS views, body-parser, express-static
 
 app.set('view engine', 'ejs')
-app.set('views', path.join(__dirname, '/views'))
-app.use(express.static("public"))
+// app.set('views', path.join(__dirname, '/views'))
+app.use(express.static('public'))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -40,12 +40,14 @@ app.use(express.json())
 app.use(logger('dev'))
 
 //setup session
-app.use(session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
-}))
+app.use(
+	session({
+		secret: process.env.SECRET,
+		resave: false,
+		saveUninitialized: false,
+		store: new MongoStore({ mongooseConnection: mongoose.connection }),
+	})
+)
 
 //Passport Initialization
 app.use(passport.initialize())
@@ -55,7 +57,6 @@ app.use(passport.session())
 
 //Forms for put/delete
 app.use(methodOverride('_method'))
-
 
 // mongoose.connect(process.env.DB_CONNECT)
 // .then(() => console.log('Database connected'))
@@ -70,8 +71,6 @@ app.use('/', mainRoutes)
 app.use('/post', postRoutes)
 app.use('/comment', commentRoute)
 
-
-
 // app.get("/register", (req, res) => {
 //     res.render("register")
 // })
@@ -85,4 +84,4 @@ app.use('/comment', commentRoute)
 // })
 
 //Start the server
-app.listen(process.env.PORT, () => console.log("Server running"))
+app.listen(process.env.PORT || 2121, () => console.log('Server running'))
